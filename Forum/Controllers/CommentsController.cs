@@ -1,87 +1,62 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Forum.Data;
+using System.Threading.Tasks;
 using Forum.Models;
 
-[Route("api/[controller]")]
-[ApiController]
-public class CommentsController : ControllerBase
+namespace Forum.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public CommentsController(ApplicationDbContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CommentsController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ForumContext _context;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
-    {
-        return await _context.Comments.ToListAsync();
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Comment>> GetComment(int id)
-    {
-        var comment = await _context.Comments.FindAsync(id);
-        if (comment == null)
+        public CommentsController(ForumContext context)
         {
-            return NotFound();
-        }
-        return comment;
-    }
-
-    [HttpPost]
-    public async Task<ActionResult<Comment>> PostComment(Comment comment)
-    {
-        _context.Comments.Add(comment);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutComment(int id, Comment comment)
-    {
-        if (id != comment.Id)
-        {
-            return BadRequest();
+            _context = context;
         }
 
-        _context.Entry(comment).State = EntityState.Modified;
-        try
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
-            await _context.SaveChangesAsync();
+            return await _context.Comments.ToListAsync();
         }
-        catch (DbUpdateConcurrencyException)
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Comment>> GetComment(int id)
         {
-            if (!_context.Comments.Any(e => e.Id == id))
+            var comment = await _context.Comments.FindAsync(id);
+
+            if (comment == null)
             {
                 return NotFound();
             }
-            else
-            {
-                throw;
-            }
+
+            return comment;
         }
 
-        return NoContent();
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteComment(int id)
-    {
-        var comment = await _context.Comments.FindAsync(id);
-        if (comment == null)
+        [HttpPost]
+        public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            return NotFound();
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
 
-        _context.Comments.Remove(comment);
-        await _context.SaveChangesAsync();
-        return NoContent();
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
-

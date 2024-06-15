@@ -1,35 +1,46 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Forum.Data;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Forum.Models;
 
 namespace Forum
 {
-    public class Startup // Класс Startup, содержащий конфигурационные методы
+    public class Startup
     {
-        public IConfiguration Configuration { get; } // Свойство для доступа к конфигурации
-
-        public Startup(IConfiguration configuration) // Конструктор класса Startup
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ForumContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 21))));
+
             services.AddControllers();
-            // Замените YourDbContext на название вашего DbContext класса
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
-                new MySqlServerVersion(new Version(8, 0, 21))));
+            services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Forum v1"));
+            }
+
+            app.UseHttpsRedirection();
+
             app.UseRouting();
+
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -37,4 +48,3 @@ namespace Forum
         }
     }
 }
-

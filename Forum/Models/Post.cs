@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Forum.Models
 {
     public class Post
@@ -8,14 +10,9 @@ namespace Forum.Models
         public string Description { get; set; }
         public string Img { get; set; }
         public DateTime Date { get; set; }
-        public int UserId { get; set; }
+        public int Uid { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Like> Likes { get; set; }
+        public User User { get; set; }
+        public ICollection<Comment> Comments { get; set; }
     }
-
 }
-
-
-

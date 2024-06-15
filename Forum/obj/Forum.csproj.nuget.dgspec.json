@@ -39,6 +39,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Mvc.DataAnnotations": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.16, )"
@@ -46,6 +50,10 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[7.0.18, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
@@ -55,7 +63,23 @@
               "target": "Package",
               "version": "[6.5.0, )"
             },
+            "System.Collections": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.ComponentModel.Annotations": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
             "System.Diagnostics.Tools": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "System.Threading.Tasks": {
               "target": "Package",
               "version": "[4.3.0, )"
             }

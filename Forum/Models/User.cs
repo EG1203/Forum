@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+
 namespace Forum.Models
 {
     public class User
@@ -9,16 +10,7 @@ namespace Forum.Models
         public string Password { get; set; }
         public string Img { get; set; }
 
-        public virtual ICollection<Post> Posts { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Subscription> Subscriptions { get; set; }
-        public virtual ICollection<Like> Likes { get; set; }
-        public virtual ICollection<UserAction> UserActions { get; set; }
-        public virtual ICollection<UserKarma> UserKarmas { get; set; }
+        public ICollection<Post> Posts { get; set; }
+        public ICollection<Comment> Comments { get; set; }
     }
-
 }
-
-
-
-
