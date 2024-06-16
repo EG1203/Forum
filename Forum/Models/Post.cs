@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Forum.Models
 {
     public class Post
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Img { get; set; }
-        public DateTime Date { get; set; }
-        public int Uid { get; set; }
+        public int id { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public string img { get; set; }
+        public DateTime date { get; set; }
+        public int uid { get; set; }
 
-        public User User { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+        [JsonIgnore]
+        public User user { get; set; }
+        [JsonIgnore]
+        public ICollection<Comment> comments { get; set; }
+        [JsonIgnore]
+        public ICollection<Like> likes { get; set; }
     }
 }

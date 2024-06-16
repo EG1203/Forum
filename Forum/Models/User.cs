@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Forum.Models
 {
     public class User
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Img { get; set; }
+        public int id { get; set; }
+        public string username { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
 
-        public ICollection<Post> Posts { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+        [JsonIgnore]
+        public ICollection<Post> posts { get; set; }
+        [JsonIgnore]
+        public ICollection<Comment> comments { get; set; }
+        [JsonIgnore]
+        public ICollection<Like> likes { get; set; }
     }
 }

@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Forum.Models
 {
     public class Comment
     {
-        public int Id { get; set; }
-        public int PostId { get; set; }
-        public int UserId { get; set; }
-        public string Content { get; set; }
-        public DateTime Date { get; set; }
+        public int id { get; set; }
+        public int post_id { get; set; }
+        public int user_id { get; set; }
+        public string content { get; set; }
+        public DateTime date { get; set; }
 
-        public Post Post { get; set; }
-        public User User { get; set; }
+        [JsonIgnore]
+        public Post post { get; set; }
+        [JsonIgnore]
+        public User user { get; set; }
     }
 }

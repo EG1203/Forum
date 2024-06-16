@@ -1,61 +1,45 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Forum.Models;
 
-namespace Forum.Models
+namespace Forum.Data
 {
     public class ForumContext : DbContext
     {
-        public ForumContext(DbContextOptions<ForumContext> options)
-            : base(options)
+        public ForumContext(DbContextOptions<ForumContext> options) : base(options)
         {
         }
 
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Post> posts { get; set; }
+        public DbSet<User> users { get; set; }
+        public DbSet<Comment> comments { get; set; }
+        public DbSet<Like> likes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Post>().ToTable("posts");
-            modelBuilder.Entity<Comment>().ToTable("comments");
-            modelBuilder.Entity<User>().ToTable("users");
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.posts)
+                .WithOne(p => p.user)
+                .HasForeignKey(p => p.uid);
 
-            modelBuilder.Entity<Post>().HasKey(p => p.Id);
-            modelBuilder.Entity<Post>().Property(p => p.Id).HasColumnName("id");
-            modelBuilder.Entity<Post>().Property(p => p.Title).HasColumnName("title");
-            modelBuilder.Entity<Post>().Property(p => p.Description).HasColumnName("description");
-            modelBuilder.Entity<Post>().Property(p => p.Img).HasColumnName("img");
-            modelBuilder.Entity<Post>().Property(p => p.Date).HasColumnName("date");
-            modelBuilder.Entity<Post>().Property(p => p.Uid).HasColumnName("uid");
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.comments)
+                .WithOne(c => c.user)
+                .HasForeignKey(c => c.user_id);
 
-            modelBuilder.Entity<Comment>().HasKey(c => c.Id);
-            modelBuilder.Entity<Comment>().Property(c => c.Id).HasColumnName("id");
-            modelBuilder.Entity<Comment>().Property(c => c.PostId).HasColumnName("post_id");
-            modelBuilder.Entity<Comment>().Property(c => c.UserId).HasColumnName("user_id");
-            modelBuilder.Entity<Comment>().Property(c => c.Content).HasColumnName("content");
-            modelBuilder.Entity<Comment>().Property(c => c.Date).HasColumnName("date");
-
-            modelBuilder.Entity<User>().HasKey(u => u.Id);
-            modelBuilder.Entity<User>().Property(u => u.Id).HasColumnName("id");
-            modelBuilder.Entity<User>().Property(u => u.Username).HasColumnName("username");
-            modelBuilder.Entity<User>().Property(u => u.Email).HasColumnName("email");
-            modelBuilder.Entity<User>().Property(u => u.Password).HasColumnName("password");
-            modelBuilder.Entity<User>().Property(u => u.Img).HasColumnName("img");
-
-            // Relationships
-            modelBuilder.Entity<Comment>()
-                .HasOne<Post>(c => c.Post)
-                .WithMany(p => p.Comments)
-                .HasForeignKey(c => c.PostId);
-
-            modelBuilder.Entity<Comment>()
-                .HasOne<User>(c => c.User)
-                .WithMany(u => u.Comments)
-                .HasForeignKey(c => c.UserId);
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.likes)
+                .WithOne(l => l.user)
+                .HasForeignKey(l => l.user_id);
 
             modelBuilder.Entity<Post>()
-                .HasOne<User>(p => p.User)
-                .WithMany(u => u.Posts)
-                .HasForeignKey(p => p.Uid);
+                .HasMany(p => p.comments)
+                .WithOne(c => c.post)
+                .HasForeignKey(c => c.post_id);
+
+            modelBuilder.Entity<Post>()
+                .HasMany(p => p.likes)
+                .WithOne(l => l.post)
+                .HasForeignKey(l => l.post_id);
         }
     }
 }

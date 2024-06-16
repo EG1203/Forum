@@ -1,8 +1,12 @@
-﻿public class PostDTO
+﻿namespace Forum.Models
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string Img { get; set; }
-    public DateTime Date { get; set; }
-    public int UserId { get; set; }
+    public class PostDTO
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public string img { get; set; }
+        public DateTime date { get; set; }
+        public int uid { get; set; }
+    }
 }

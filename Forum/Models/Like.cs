@@ -1,15 +1,17 @@
 ﻿using System.Text.Json.Serialization;
-using Forum.Models;
 
-public class Like
+namespace Forum.Models
 {
-    public int Id { get; set; }
-    public int PostId { get; set; }
-    public int UserId { get; set; }
-    public bool IsLike { get; set; }
+    public class Like
+    {
+        public int id { get; set; }
+        public int post_id { get; set; }
+        public int user_id { get; set; }
+        public bool is_like { get; set; }
 
-    [JsonIgnore]
-    public Post Post { get; set; }
-    [JsonIgnore]
-    public User User { get; set; }
+        [JsonIgnore]
+        public Post post { get; set; }
+        [JsonIgnore]
+        public User user { get; set; }
+    }
 }
