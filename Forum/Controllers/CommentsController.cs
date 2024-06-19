@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using System.Linq;
+using System.Collections.Generic;
 using Forum.Models;
 using Forum.Data;
 
@@ -22,14 +22,14 @@ namespace Forum.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
-            return await _context.comments.Include(c => c.post).Include(c => c.user).ToListAsync();
+            return await _context.comments.ToListAsync();
         }
 
         // GET: api/Comments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
-            var comment = await _context.comments.Include(c => c.post).Include(c => c.user).FirstOrDefaultAsync(c => c.id == id);
+            var comment = await _context.comments.FindAsync(id);
 
             if (comment == null)
             {
@@ -41,17 +41,25 @@ namespace Forum.Controllers
 
         // POST: api/Comments
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        public async Task<ActionResult<Comment>> PostComment([FromBody] CommentDTO commentDto)
         {
-            if (!_context.posts.Any(p => p.id == comment.post_id) || !_context.users.Any(u => u.id == comment.user_id))
+            if (commentDto == null)
             {
-                return BadRequest(new { error = "Invalid post_id or user_id" });
+                return BadRequest("Comment data is required.");
             }
+
+            var comment = new Comment
+            {
+                post_id = commentDto.post_id,
+                user_id = commentDto.user_id,
+                content = commentDto.content,
+                date = commentDto.date
+            };
 
             _context.comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetComment), new { id = comment.id }, comment);
+            return CreatedAtAction("GetComment", new { id = comment.id }, comment);
         }
 
         // DELETE: api/Comments/5

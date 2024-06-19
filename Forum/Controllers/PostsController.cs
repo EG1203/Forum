@@ -22,22 +22,14 @@ namespace Forum.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            return await _context.posts
-                .Include(p => p.user)
-                .Include(p => p.comments)
-                .Include(p => p.likes)
-                .ToListAsync();
+            return await _context.posts.ToListAsync();
         }
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
         {
-            var post = await _context.posts
-                .Include(p => p.user)
-                .Include(p => p.comments)
-                .Include(p => p.likes)
-                .FirstOrDefaultAsync(p => p.id == id);
+            var post = await _context.posts.FindAsync(id);
 
             if (post == null)
             {
@@ -49,8 +41,22 @@ namespace Forum.Controllers
 
         // POST: api/Posts
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<Post>> PostPost([FromBody] PostDTO postDto)
         {
+            if (postDto == null)
+            {
+                return BadRequest("Post data is required.");
+            }
+
+            var post = new Post
+            {
+                title = postDto.title,
+                description = postDto.description,
+                img = postDto.img,
+                date = postDto.date,
+                uid = postDto.uid
+            };
+
             _context.posts.Add(post);
             await _context.SaveChangesAsync();
 
